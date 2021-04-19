@@ -9,7 +9,7 @@ from datetime import datetime
 from datetime import timedelta
 
 config = configparser.ConfigParser()
-config.read(os.environ['CONFIG'])
+config.read('config.ini')
 
 DELETE_DAYS = 28
 ARCHIVE_DAYS = 28
