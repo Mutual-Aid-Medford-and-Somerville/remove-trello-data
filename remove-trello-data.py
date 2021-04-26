@@ -14,7 +14,7 @@ config.read('config.ini')
 DELETE_DAYS = 28
 ARCHIVE_DAYS = 28
 
-# Sam stuff
+# Personal key and token
 TRELLO_KEY = config['TRELLO']['KEY']
 TRELLO_TOKEN = config['TRELLO']['TOKEN']
 
@@ -52,6 +52,12 @@ def filterToDelete(card):
 	return filterByTime(card, DELETE_DAYS) and filterByState(card, ('closed', True))
 
 def toDeleteReport(card):
+	return actionReport(card, 'Delete')
+
+def toArchiveReport(card):
+	return actionReport(card, 'Archive')
+
+def actionReport(card, purpose):
 	report = {}
 
 	# Get name, list, and labels
@@ -159,15 +165,13 @@ cards = []
 cards.extend(getCards(FOLLOW_UP_ID))
 cards.extend(getCards(NEED_MET_ID))
 
-#filteredList = list(filter(filterToDelete, cards))
-filteredList = list(filter(filterToArchive, cards))
+toDeleteList = list(filter(filterToDelete, cards))
+toArchiveList = list(filter(filterToArchive, cards))
 
-for card in filteredList:
-	print(jsonDump(card))
-
-# deleteReportList = list(map(lambda card: toDeleteReport(card), filteredList))
+deleteReportList = list(map(lambda item: toDeleteReport(item), toDeleteList))
+archiveReportList = list(map(lambda item: toArchiveReport(item), toArchiveList))
  
-#for card in deleteReportList:
-#	print(card)
+for card in deleteReportList:
+	print(card)
 
 #generateMdFile(cardInfo)
