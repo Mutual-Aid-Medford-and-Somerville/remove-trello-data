@@ -75,7 +75,7 @@ def actionReport(card, purpose):
 	# Fetch recent comments
 	actions = requests.request(
 		'GET',
-		'https://api.trello.com/1/cards/%s/actions'%(card['id']),
+		f"https://api.trello.com/1/cards/{card['id']}/actions"),
 		headers=headers,
 		params={
 			'key': TRELLO_KEY,
@@ -176,7 +176,7 @@ def generateReport(cardInfo, reportType):
 def getCards(listID):
 	response = requests.request(
 		'GET',
-		'https://api.trello.com/1/lists/%s/cards'%(listID),
+		f'https://api.trello.com/1/lists/{listID}/cards',
 		headers=headers,
 		params={
 			'key': TRELLO_KEY,
