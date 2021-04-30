@@ -250,34 +250,20 @@ def createCard(name):
 
 def createArchiveAndDeleteReport():
 	cards = []
-
- 	print('Getting cards from "Follow Up"...')
-
- 	cards.extend(getCards(FOLLOW_UP_ID))
-
- 	print('Getting cards from "Needs Met"...')
-
- 	cards.extend(getCards(NEED_MET_ID))
-
- 	print('Filtering cards to archive...')
-
- 	toArchiveList = list(filter(filterToArchive, cards))
-
- 	print('Filtering cards to delete...')
-
- 	toDeleteList = list(filter(filterToDelete, cards))
-
- 	print('Building Archive list...')
-
- 	archiveReportList = list(map(lambda item: toArchiveReport(item), toArchiveList))
-
- 	print('Building Delete list...')
-
- 	deleteReportList = list(map(lambda item: toDeleteReport(item), toDeleteList))
-
- 	generateArchiveReport(archiveReportList)
- 	generateDeleteReport(deleteReportList)
-
+	print('Getting cards from "Follow Up"...')
+	cards.extend(getCards(FOLLOW_UP_ID))
+	print('Getting cards from "Needs Met"...')
+	cards.extend(getCards(NEED_MET_ID))
+	print('Filtering cards to archive...')
+	toArchiveList = list(filter(filterToArchive, cards))
+	print('Filtering cards to delete...')
+	toDeleteList = list(filter(filterToDelete, cards))
+	print('Building Archive list...')
+	archiveReportList = list(map(lambda item: toArchiveReport(item), toArchiveList))
+	print('Building Delete list...')
+	deleteReportList = list(map(lambda item: toDeleteReport(item), toDeleteList))
+	generateArchiveReport(archiveReportList)
+	generateDeleteReport(deleteReportList)
 	return
 
 def performArchiveAndDelete():
@@ -308,5 +294,5 @@ def testArchiveDelete():
 
 	return
 
-# testArchiveDelete()
+testArchiveDelete()
 # createArchiveAndDeleteReport()
