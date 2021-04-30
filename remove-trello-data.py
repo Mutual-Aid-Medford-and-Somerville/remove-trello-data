@@ -52,6 +52,12 @@ def filterToArchive(card):
 def filterToDelete(card):
 	return filterByTime(card, DELETE_DAYS) and filterByState(card, ('closed', True))
 
+def prepareForArchive(card):
+	return filterByTime(card, ARCHIVE_DAYS + PREVIOUS_WEEK) and filterByState(card, ('closed', False))
+
+def prepareForDelete(card):
+	return filterByTime(card, DELETE_DAYS + PREVIOUS_WEEK) and filterByState(card, ('closed', True))
+
 def toDeleteReport(card):
 	return actionReport(card, 'Delete')
 
@@ -274,6 +280,25 @@ def createArchiveAndDeleteReport():
 
 	return
 
+def performArchiveAndDelete():
+	cards = []
+	print('Getting cards from "Follow Up"...')
+	cards.extend(getCards(FOLLOW_UP_ID))
+	print('Getting cards from "Needs Met"...')
+	cards.extend(getCards(NEED_MET_ID))
+	print('Filtering cards to archive...')
+	toArchiveList = list(filter(prepareForArchive, cards))
+	print('Filtering cards to delete...')
+	toDeleteList = list(filter(prepareForDelete, cards))
+
+	for card in toArchiveList:
+		archiveCard(card['id'])
+
+	for card in toDeleteList:
+		deleteCard(card['id'])
+
+	return
+ 
 def testArchiveDelete():
 	testCard = createCard('test-archive-delete-name')
 
