@@ -13,6 +13,7 @@ config.read('config.ini')
 
 DELETE_DAYS = 28
 ARCHIVE_DAYS = 28
+PREVIOUS_WEEK = 7
 
 # Personal key and token
 TRELLO_KEY = config['TRELLO']['KEY']
@@ -75,7 +76,7 @@ def actionReport(card, purpose):
 	# Fetch recent comments
 	actions = requests.request(
 		'GET',
-		f"https://api.trello.com/1/cards/{card['id']}/actions"),
+		f"https://api.trello.com/1/cards/{card['id']}/actions",
 		headers=headers,
 		params={
 			'key': TRELLO_KEY,
@@ -186,31 +187,101 @@ def getCards(listID):
 
 	return json.loads(response.text)
 
-cards = []
+def archiveProvidedCards(cards):
+	for card in cards:
+		status = archiveCard(card['id'])
+		if status != '200':
+			print(f"Failed to archive {card['name']}.")
 
-print('Getting cards from "Follow Up"...')
+def deleteProvidedCards(cards):
+	for card in cards:
+		status = deleteCard(card['id'])
+		if status != '200':
+			print(f"Failed to delete {card['name']}.")
 
-cards.extend(getCards(FOLLOW_UP_ID))
+def archiveCard(cardID):
+	response = requests.put(
+		f"https://api.trello.com/1/cards/{cardID}",
+		headers=headers,
+		params={
+			'key': TRELLO_KEY,
+			'token': TRELLO_TOKEN,
+		},
+		data={
+			"closed": "true"
+		}
+	)
 
-print('Getting cards from "Needs Met"...')
+	return response.status_code
 
-cards.extend(getCards(NEED_MET_ID))
+def deleteCard(cardID):
+	response = requests.delete(
+		f"https://api.trello.com/1/cards/{cardID}",
+		headers=headers,
+		params={
+			'key': TRELLO_KEY,
+			'token': TRELLO_TOKEN
+		}
+	)
 
-print('Filtering cards to archive...')
+	return response.status_code
 
-toArchiveList = list(filter(filterToArchive, cards))
+def createCard(name):
+	response = requests.post(
+		f"https://api.trello.com/1/cards",
+		headers=headers,
+		params={
+			'key': TRELLO_KEY,
+			'token': TRELLO_TOKEN
+		},
+		data={
+			"name": name,
+			"idList": FOLLOW_UP_ID
+		},
+	)
 
-print('Filtering cards to delete...')
+	return json.loads(response.text)
 
-toDeleteList = list(filter(filterToDelete, cards))
+def createArchiveAndDeleteReport():
+	cards = []
 
-print('Building Archive list...')
+ 	print('Getting cards from "Follow Up"...')
 
-archiveReportList = list(map(lambda item: toArchiveReport(item), toArchiveList))
+ 	cards.extend(getCards(FOLLOW_UP_ID))
 
-print('Building Delete list...')
- 
-deleteReportList = list(map(lambda item: toDeleteReport(item), toDeleteList))
+ 	print('Getting cards from "Needs Met"...')
 
-generateArchiveReport(archiveReportList)
-generateDeleteReport(deleteReportList)
+ 	cards.extend(getCards(NEED_MET_ID))
+
+ 	print('Filtering cards to archive...')
+
+ 	toArchiveList = list(filter(filterToArchive, cards))
+
+ 	print('Filtering cards to delete...')
+
+ 	toDeleteList = list(filter(filterToDelete, cards))
+
+ 	print('Building Archive list...')
+
+ 	archiveReportList = list(map(lambda item: toArchiveReport(item), toArchiveList))
+
+ 	print('Building Delete list...')
+
+ 	deleteReportList = list(map(lambda item: toDeleteReport(item), toDeleteList))
+
+ 	generateArchiveReport(archiveReportList)
+ 	generateDeleteReport(deleteReportList)
+
+	return
+
+def testArchiveDelete():
+	testCard = createCard('test-archive-delete-name')
+
+	print(archiveCard(testCard['id']))
+	
+	print(deleteCard(testCard['id']))
+
+	return
+
+# testArchiveDelete()
+# createArchiveAndDeleteReport()
