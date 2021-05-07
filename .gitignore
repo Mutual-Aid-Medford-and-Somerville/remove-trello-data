@@ -1,3 +1,4 @@
 config.ini
 .vscode
 *.md
+__pycache__
