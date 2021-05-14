@@ -1,10 +1,10 @@
-import os
+import getopt, sys
 
 from datetime import datetime
 from mdutils import MdUtils
 
 from trelloeditutils import *
-from trellorequests import archiveCard, deleteCard, getCards, getCardComments
+from trellorequests import getCards, getCardComments
 
 def filterToArchive(card):
 	return filterByTime(card, getReportArchiveDate()) and filterByState(card, ('closed', False))
@@ -63,7 +63,7 @@ def generateReport(cardInfo, reportType):
 	datestr = datetime.now().strftime('%Y-%m-%d')
 	reportname = f"{reportType}-{datestr}-report"
 
-	print('Generating %s...'%(reportname))
+	print(f"Generating {reportname}...")
 	mdFile = MdUtils(file_name=reportname, title=f'# {reportType} Report for {datestr}')
 	mdFile.new_line()
 
@@ -91,7 +91,7 @@ def generateReport(cardInfo, reportType):
 
 	upcomingAction = 'Archived' if reportType == 'Archive' else 'Deleted'
 	
-	mdFile.write(f'## The following cards will be {upcomingAction} next week')
+	mdFile.write(f'## The following {len(cardInfo)} cards will be {upcomingAction} next week')
 	mdFile.new_line()
 	mdFile.new_line()
 
@@ -126,20 +126,47 @@ def generateReport(cardInfo, reportType):
 
 def createArchiveAndDeleteReport():
 	cards = []
+
 	print('Getting cards from "Follow Up"...')
 	cards.extend(getCards(getFollowUpList()))
 	print('Getting cards from "Needs Met"...')
 	cards.extend(getCards(getNeedsMetList()))
+
 	print('Filtering cards to archive...')
 	toArchiveList = list(filter(filterToArchive, cards))
+	print(f"Found {len(toArchiveList)} to archive...")
+
 	print('Filtering cards to delete...')
 	toDeleteList = list(filter(filterToDelete, cards))
-	print('Building Archive list...')
+	print(f"Found {len(toDeleteList)} to delete...")
+
+	print('Building Archive report...')
 	archiveReportList = list(map(lambda item: toArchiveReport(item), toArchiveList))
-	print('Building Delete list...')
-	deleteReportList = list(map(lambda item: toDeleteReport(item), toDeleteList))
 	generateArchiveReport(archiveReportList)
+
+	print('Building Delete report...')
+	deleteReportList = list(map(lambda item: toDeleteReport(item), toDeleteList))
 	generateDeleteReport(deleteReportList)
+
 	return
 
-createArchiveAndDeleteReport()
+def usage():
+	print('Generate reports for pruning the Trello board.')
+	print('Usage: py generatetrelloreport.py -h for this dialogue.')
+	return
+
+def main(argv):
+	try:
+		opts, args = getopt.getopt(argv, 'h', ['help'])
+	except getopt.GetoptError:
+		usage()
+		sys.exit(2)
+	for opt, arg in opts:
+		if opt in ('-h', '--help'):
+			usage()
+			sys.exit()
+
+	createArchiveAndDeleteReport()
+
+if __name__ == "__main__":
+	main(sys.argv[1:])

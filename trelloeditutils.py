@@ -42,8 +42,8 @@ def getReportArchiveDate():
 def getReportDeleteDate():
     return DELETE_DAYS
 
-def getPrepareDeleteDate():
-    return getReportDeleteDate() + PREVIOUS_WEEK
+def getPrepareDeleteDate(adjustByDays=PREVIOUS_WEEK):
+    return getReportDeleteDate() + adjustByDays
 
-def getPrepareArchiveDate():
-    return getReportArchiveDate() + PREVIOUS_WEEK
+def getPrepareArchiveDate(adjustByDays=PREVIOUS_WEEK):
+    return getReportArchiveDate() + adjustByDays
