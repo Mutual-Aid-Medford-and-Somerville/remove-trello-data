@@ -3,8 +3,8 @@ import getopt, sys
 from datetime import datetime
 from mdutils import MdUtils
 
-from trelloeditutils import *
-from trellorequests import getCards, getCardComments
+from trello_utils import *
+from trello_api import getCards, getCardComments
 
 def filterToArchive(card):
 	return filterByTime(card, getReportArchiveDate()) and filterByState(card, ('closed', False))
@@ -84,13 +84,13 @@ def generateReport(cardInfo, reportType):
 	else:
 		print(f"Unrecognized report type: {reportType}. Exiting...")
 		return
-		
+
 	mdFile.write('Please reach out to the tech-team if you have any questions about the privacy policy, these reports, or our Trello clean-up actions.')
 	mdFile.new_line()
 	mdFile.new_line()
 
 	upcomingAction = 'Archived' if reportType == 'Archive' else 'Deleted'
-	
+
 	mdFile.write(f'## The following {len(cardInfo)} cards will be {upcomingAction} next week')
 	mdFile.new_line()
 	mdFile.new_line()
