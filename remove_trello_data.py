@@ -1,7 +1,7 @@
 import sys, getopt
 
-from trelloeditutils import *
-from trellorequests import archiveCard, deleteCard, getCards
+from trello_utils import *
+from trello_api import archiveCard, deleteCard, getCards
 
 config = configparser.ConfigParser()
 config.read('config.ini')
@@ -65,8 +65,8 @@ def performArchiveAndDelete(action, daysSince):
 
 def usage():
 	print('Archive or delete Trello data.')
-	print('Usage: removetrellodata.py -a <action> -d <days since report>')
-	print('	removetrellodata.py -h for this dialogue.')
+	print('Usage: remove_trello_data.py -a <action> -d <days since report>')
+	print('	remove_trello_data.py -h for this dialogue.')
 	print('	Can also use --action, --days, and --help.')
 	return
 
