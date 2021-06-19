@@ -1,8 +1,16 @@
-import sys
+import configparser
 import getopt
+import sys
 
-from trello_utils import *
 from trello_api import archiveCard, deleteCard, getCards
+from trello_utils import (
+    filterByState,
+    filterByTime,
+    getFollowUpList,
+    getNeedsMetList,
+    getPrepareArchiveDate,
+    getPrepareDeleteDate,
+)
 
 config = configparser.ConfigParser()
 config.read("config.ini")

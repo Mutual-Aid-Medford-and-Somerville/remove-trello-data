@@ -1,9 +1,6 @@
-import json
-import os
 import configparser
-
-from datetime import date
-from datetime import timedelta
+import json
+from datetime import date, timedelta
 
 config = configparser.ConfigParser()
 config.read("config.ini")

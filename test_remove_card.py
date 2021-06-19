@@ -1,4 +1,4 @@
-from trello_api import archiveCard, deleteCard, createCard
+from trello_api import archiveCard, createCard, deleteCard
 from trello_utils import getFollowUpList
 
 

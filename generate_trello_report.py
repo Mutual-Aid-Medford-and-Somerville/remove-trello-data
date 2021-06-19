@@ -1,21 +1,29 @@
 import getopt
 import sys
-
 from datetime import datetime
+
 from mdutils import MdUtils
 
-from trello_utils import *
-from trello_api import getCards, getCardComments
+from trello_api import getCardComments, getCards
+from trello_utils import (
+    filterByState,
+    filterByTime,
+    getFollowUpList,
+    getLastActivity,
+    getNeedsMetList,
+    getPrepareArchiveDate,
+    getPrepareDeleteDate,
+)
 
 
 def filterToArchive(card):
-    return filterByTime(card, getReportArchiveDate()) and filterByState(
+    return filterByTime(card, getPrepareArchiveDate()) and filterByState(
         card, ("closed", False)
     )
 
 
 def filterToDelete(card):
-    return filterByTime(card, getReportDeleteDate()) and filterByState(
+    return filterByTime(card, getPrepareDeleteDate()) and filterByState(
         card, ("closed", True)
     )
 

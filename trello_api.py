@@ -1,6 +1,7 @@
-import requests
-import json
 import configparser
+import json
+
+import requests
 
 config = configparser.ConfigParser()
 config.read("config.ini")
