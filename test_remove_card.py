@@ -1,13 +1,15 @@
-from trello_api import archiveCard, deleteCard, createCard
+from trello_api import archiveCard, createCard, deleteCard
 from trello_utils import getFollowUpList
 
+
 def testArchiveDelete():
-	testCard = createCard('test-archive-delete-name', getFollowUpList())
+    testCard = createCard("test-archive-delete-name", getFollowUpList())
 
-	print(archiveCard(testCard['id']))
+    print(archiveCard(testCard["id"]))
 
-	print(deleteCard(testCard['id']))
+    print(deleteCard(testCard["id"]))
 
-	return
+    return
+
 
 testArchiveDelete()
