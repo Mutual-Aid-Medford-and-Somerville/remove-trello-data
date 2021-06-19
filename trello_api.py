@@ -38,7 +38,7 @@ def getCardComments(cardID):
 
 def createCard(name, cardListID):
     response = requests.post(
-        f"https://api.trello.com/1/cards",
+        "https://api.trello.com/1/cards",
         headers=headers,
         params={"key": TRELLO_KEY, "token": TRELLO_TOKEN},
         data={"name": name, "idList": cardListID},
