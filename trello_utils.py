@@ -27,11 +27,26 @@ def filterByTime(card, dayThreshold):
 	relevantTimespan = timedelta(days=dayThreshold)
 	return (date.today() - lastActivity) >= relevantTimespan
 
+def filterByDateBound(card, dateString):
+	lastActivity = getLastActivity(card)
+	dateBound = date.fromisoformat(dateString)
+	return lastActivity > dateBound
+
+def filterByLabel(card, labelName):
+	cardLabels = list(map(lambda label: label['name'], card['labels']))
+	return labelName in cardLabels
+
+def filterByRespondedLists(card):
+	return card['idList'] == getFollowUpList() or card['idList'] == getNeedsMetList() or card['idList'] == getOngoingNeedList()
+
 def getFollowUpList():
     return config['BOARDS']['FOLLOW_UP']
 
 def getNeedsMetList():
     return config['BOARDS']['NEED_MET']
+
+def getOngoingNeedList():
+    return config['BOARDS']['ONGOING_NEED']
 
 def getReportArchiveDate():
     return ARCHIVE_DAYS
