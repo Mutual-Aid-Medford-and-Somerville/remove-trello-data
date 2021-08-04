@@ -14,6 +14,19 @@ headers = {
 	'Accept': 'application/json'
 }
 
+def getAllCards(boardID):
+	response = requests.request(
+		'GET',
+		f'https://api.trello.com/1/board/{boardID}/cards/all',
+		headers=headers,
+		params={
+			'key': TRELLO_KEY,
+			'token': TRELLO_TOKEN
+		}
+	)
+
+	return json.loads(response.text)
+
 def getCards(listID):
 	response = requests.request(
 		'GET',

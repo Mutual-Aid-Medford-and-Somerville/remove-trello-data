@@ -12,9 +12,6 @@ DELETE_DAYS = 28
 ARCHIVE_DAYS = 28
 PREVIOUS_WEEK = 7
 
-# Tech team board.
-REQUESTS_ID = config['MAMAS']['REQUESTS']
-
 def jsonDump(one_card):
 	print(json.dumps(one_card, sort_keys=True, indent=4, separators=(",", ": ")))
 
