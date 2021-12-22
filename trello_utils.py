@@ -39,6 +39,9 @@ def filterByLabel(card, labelName):
 def filterByRespondedLists(card):
 	return card['idList'] == getFollowUpList() or card['idList'] == getNeedsMetList() or card['idList'] == getOngoingNeedList()
 
+def getBoard():
+	return config['MAMAS']['REQUESTS']
+
 def getFollowUpList():
     return config['BOARDS']['FOLLOW_UP']
 

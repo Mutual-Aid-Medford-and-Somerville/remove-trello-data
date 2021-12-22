@@ -1,7 +1,7 @@
 import sys, getopt
 
 from trello_utils import *
-from trello_api import archiveCard, deleteCard, getCards
+from trello_api import archiveCard, deleteCard, getArchivedCards, getCards
 
 config = configparser.ConfigParser()
 config.read('config.ini')
@@ -48,7 +48,8 @@ def performArchiveAndDelete(action, daysSince):
 			print(f"Skipping {action} and exiting.")
 			sys.exit()
 	elif action == 'delete':
-		print('Filtering cards to delete...')
+		print('Preparing cards to delete...')
+		cards = getArchivedCards(getBoard())
 		toDeleteList = list(filter(lambda card: prepareForDelete(card, daysSince), cards))
 		canProceed = checkActions(action, len(toDeleteList))
 		if canProceed:

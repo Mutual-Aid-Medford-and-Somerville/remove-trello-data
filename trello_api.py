@@ -27,6 +27,19 @@ def getAllCards(boardID):
 
 	return json.loads(response.text)
 
+def getArchivedCards(boardID):
+	response = requests.request(
+		'GET',
+		f'https://api.trello.com/1/board/{boardID}/cards/closed',
+		headers=headers,
+		params={
+			'key': TRELLO_KEY,
+			'token': TRELLO_TOKEN
+		}
+	)
+
+	return json.loads(response.text)
+
 def getCards(listID):
 	response = requests.request(
 		'GET',

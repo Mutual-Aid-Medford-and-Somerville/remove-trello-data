@@ -4,7 +4,7 @@ from datetime import datetime
 from mdutils import MdUtils
 
 from trello_utils import *
-from trello_api import getCards, getCardComments
+from trello_api import getCards, getCardComments, getArchivedCards
 
 def filterToArchive(card):
 	return filterByTime(card, getReportArchiveDate()) and filterByState(card, ('closed', False))
@@ -136,8 +136,9 @@ def createArchiveAndDeleteReport():
 	toArchiveList = list(filter(filterToArchive, cards))
 	print(f"Found {len(toArchiveList)} to archive...")
 
-	print('Filtering cards to delete...')
-	toDeleteList = list(filter(filterToDelete, cards))
+	print('Getting cards to delete...')
+	toDeleteList = getArchivedCards(getBoard())
+	toDeleteList = list(filter(filterToDelete, toDeleteList))
 	print(f"Found {len(toDeleteList)} to delete...")
 
 	print('Building Archive report...')
