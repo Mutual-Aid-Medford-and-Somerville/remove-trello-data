@@ -24,8 +24,13 @@ def deleteProvidedCards(cards):
 		if status != '200':
 			print(f"Failed to delete {card['name']}.")
 
-def checkActions(action, cardAmount):
-	response = input(f"Are you sure you wish to {action} {cardAmount} cards? (y/N)")
+def checkActions(action, cards):
+	print(f"The following are cards that will be {action}d:");
+	for idx in range(0, 3):
+		print(f"\t{cards[idx]['name']} - {cards[idx]['dateLastActivity']}")
+	for idx in range(len(cards)-3, len(cards)-1):
+		print(f"\t{cards[idx]['name']} - {cards[idx]['dateLastActivity']}")
+	response = input(f"Are you sure you wish to {action} {len(cards)} cards? (y/N)")
 	if(str.lower(response) == 'y'):
 		return True
 	return False
@@ -40,7 +45,7 @@ def performArchiveAndDelete(action, daysSince):
 	if action == 'archive':
 		print('Filtering cards to archive...')
 		toArchiveList = list(filter(lambda card: prepareForArchive(card, daysSince), cards))
-		canProceed = checkActions(action, len(toArchiveList))
+		canProceed = checkActions(action, toArchiveList)
 		if canProceed:
 			for card in toArchiveList:
 				archiveCard(card['id'])
@@ -51,7 +56,7 @@ def performArchiveAndDelete(action, daysSince):
 		print('Preparing cards to delete...')
 		cards = getArchivedCards(getBoard())
 		toDeleteList = list(filter(lambda card: prepareForDelete(card, daysSince), cards))
-		canProceed = checkActions(action, len(toDeleteList))
+		canProceed = checkActions(action, toDeleteList)
 		if canProceed:
 			for card in toDeleteList:
 				deleteCard(card['id'])
